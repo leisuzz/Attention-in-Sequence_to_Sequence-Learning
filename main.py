@@ -51,8 +51,8 @@ class Encoder(nn.Module):
 
     def forward(self, x):
 
-        # x= (seq_len, Batch)
-        embedding = self.dropout(self.embedding)    # embedding= (seq_len, N, embedding_size)
+        # x= (seq_len, N(Batch))
+        embedding = self.dropout(self.embedding(x))    # embedding= (seq_len, N, embedding_size)
 
         encoder_states, (hidden, cell) = self.rnn(embedding)        # (seq_len, N, hidden_size)
 

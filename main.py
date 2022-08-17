@@ -7,24 +7,21 @@ import spacy
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter  # to print to tensorboard
 from torchtext.datasets import Multi30k
-from torchtext.data import Field, BucketIterator
-
-spacy_ger = spacy.load("de")
-spacy_eng = spacy.load("en")
+from torchtext.legacy.data import Field, BucketIterator
+from torchtext.data.utils import get_tokenizer
 
 
-def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)]
+spacy_ger = spacy.load("de_core_web_sm")
+spacy_eng = spacy.load("en_core_web_sm")
 
+german = get_tokenizer(spacy_ger)
+english = get_tokenizer(spacy_eng)
 
-def tokenize_eng(text):
-    return [tok.text for tok in spacy_eng.tokenizer(text)]
-
-
-german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
-
+german = Field(
+    tokenize=german, lower=True, init_token="<sos>", eos_token="<eos>"
+)
 english = Field(
-    tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
+    tokenize=english, lower=True, init_token="<sos>", eos_token="<eos>"
 )
 
 train_data, valid_data, test_data = Multi30k.splits(
